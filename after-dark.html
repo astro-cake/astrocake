@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<title>after dark</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manufacturing+Consent&family=Inter+Tight:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500;1,800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --sans:'Inter Tight',Helvetica,Arial,sans-serif;
+  --bl:'Manufacturing Consent','UnifrakturMaguntia',serif;
+  /* surface ramp — light */
+  --surface:#eeece8;--surface-ad:#f2ebdd;--text:#1a1917;--text-muted:#5a564f;
+  --rule:#1a1917;--rule-soft:#cfcac1;--block:#1a1917;--on-block:#eeece8;
+  --emphasis:#6b1a1f;
+  /* app accent — blue spectrum default */
+  --accent:#00AFF0;--accent-soft:rgba(0,175,240,.12);
+  --green:#5a8f4a;--red:#c23b22;--gold:#c9a227;
+}
+[data-theme="dark"]{
+  --surface:#1a1917;--surface-ad:#2b2a28;--text:#eeece8;--text-muted:#b5ac9d;
+  --rule:#eeece8;--rule-soft:#4a4744;--block:#eeece8;--on-block:#1a1917;
+  --emphasis:#c9a227;--green:#7ab76a;--red:#e06050;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:var(--sans);background:var(--surface);color:var(--text);-webkit-font-smoothing:antialiased;transition:background .3s,color .3s}
+button{font-family:inherit;cursor:pointer;color:inherit;border:none;background:none;-webkit-tap-highlight-color:transparent}
+
+.bg-grad{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(120% 50% at 50% -6%,var(--accent-soft) 0%,transparent 60%),
+             radial-gradient(80% 40% at 100% 105%,var(--accent-soft) 0%,transparent 55%);
+  opacity:.7;transition:background .4s}
+@keyframes fadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.wrap{position:relative;z-index:1;max-width:460px;margin:0 auto;padding:22px 16px calc(110px + env(safe-area-inset-bottom,0px))}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--rule)}
+.brand .wm{font-family:var(--sans);font-size:22px;font-weight:400;text-transform:uppercase;letter-spacing:-.04em;line-height:1;display:flex;align-items:center;gap:6px}
+.brand .sub{font-size:8px;letter-spacing:.3em;text-transform:uppercase;font-weight:500;font-style:italic;color:var(--text-muted);margin-top:3px}
+
+.iconbtn{flex:0 0 auto;width:36px;height:36px;border:1px solid var(--rule);background:var(--surface);font-size:15px;display:grid;place-items:center}
+.iconbtn:active{transform:scale(.94)}
+.viewtitle{font-size:28px;font-weight:400;text-transform:uppercase;letter-spacing:-.04em;line-height:.92}
+.viewtitle em{font-weight:800;font-style:italic}
+.viewsub{font-size:13px;color:var(--text-muted);margin-top:4px;margin-bottom:13px}
+.panel{background:var(--surface-ad);border:1px solid var(--rule);padding:16px;margin-top:6px}
+.label{display:block;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--text-muted);font-weight:500;margin:2px 2px 10px}
+textarea,.input{width:100%;border:1px solid var(--rule-soft);outline:none;background:var(--surface);color:var(--text);font:400 15px/1.45 var(--sans);padding:13px;transition:border-color .18s}
+textarea{min-height:90px;resize:none}
+textarea:focus,.input:focus{border-color:var(--accent)}
+textarea::placeholder,.input::placeholder{color:var(--text-muted)}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+.chip{white-space:nowrap;border:1px solid var(--rule-soft);background:var(--surface);color:var(--text-muted);padding:8px 12px;font:500 12px/1 var(--sans);display:flex;align-items:center;gap:6px;transition:.18s;letter-spacing:2px;text-transform:uppercase}
+.chip.active{background:var(--accent-soft);border-color:var(--accent);color:var(--text)}.chip:active{transform:scale(.96)}
+.primary{width:100%;margin-top:13px;background:var(--block);color:var(--on-block);padding:15px;font:700 13px/1 var(--sans);letter-spacing:3px;text-transform:uppercase;transition:.18s}
+.primary.ghost{background:transparent;color:var(--text);border:1px solid var(--rule)}
+.primary:disabled{background:var(--surface);color:var(--text-muted);border:1px solid var(--rule-soft)}.primary:active:not(:disabled){transform:scale(.985)}
+.seclabel{display:flex;align-items:center;gap:8px;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--text-muted);font-weight:500;margin:18px 2px 9px}
+.statRow{display:flex;gap:10px;margin-bottom:6px}
+.statBox{flex:1;background:var(--surface-ad);border:1px solid var(--rule);padding:13px}
+.statNum{font-size:21px;font-weight:800;letter-spacing:-.02em}
+.statLbl{font-size:10px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:var(--text-muted);margin-top:3px}
+.fcard{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:var(--surface-ad);border:1px solid var(--rule);padding:13px;margin-bottom:9px;animation:rise .22s ease both}
+.fcard:active{transform:scale(.99)}
+.fav{flex:0 0 44px;height:44px;display:grid;place-items:center;font-size:17px;font-weight:800;color:var(--on-block)}
+.fmeta{flex:1;min-width:0}
+.fname{font-size:15px;font-weight:600;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.tier{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:3px 7px;border:1px solid var(--rule-soft)}
+.tier.whale{color:var(--gold);border-color:var(--gold)}
+.tier.vip{color:var(--text);border-color:var(--accent)}
+.tier.sub{color:var(--text-muted)}
+.fspend{font-size:13px;font-weight:800;margin-top:3px}
+.fnote{font-size:12px;color:var(--text-muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fright{text-align:right;flex:0 0 auto}
+.fmom{font-size:11px;font-weight:700;white-space:nowrap}
+.flast{font-size:11px;color:var(--text-muted);margin-top:4px;white-space:nowrap}
+.replyCard{position:relative;background:var(--surface-ad);border:1px solid var(--rule);padding:16px;overflow:hidden;margin-top:13px;animation:rise .22s ease both}
+.replyCard:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--accent)}
+.rcLbl{font-size:11px;font-weight:500;color:var(--text);margin-bottom:7px;display:flex;align-items:center;gap:6px;letter-spacing:2px;text-transform:uppercase}
+.replyText{font-size:17px;line-height:1.4;font-weight:600}
+.scriptGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px}
+.scriptBtn{text-align:left;background:var(--surface);border:1px solid var(--rule-soft);padding:12px;font:600 13px/1.2 var(--sans)}
+.scriptBtn span{display:block;font-weight:400;font-size:11px;color:var(--text-muted);margin-top:3px}
+.scriptBtn:active{transform:scale(.98)}
+.vitem{display:flex;align-items:center;gap:12px;background:var(--surface-ad);border:1px solid var(--rule);padding:12px;margin-bottom:9px}
+.vthumb{flex:0 0 52px;height:52px;display:grid;place-items:center;font-size:22px;background:var(--accent-soft);border:1px solid var(--rule-soft)}
+.vmeta{flex:1;min-width:0}
+.vname{font-size:14px;font-weight:600}
+.vstat{font-size:12px;color:var(--text-muted);margin-top:2px}
+.vprice{font-size:15px;font-weight:800;color:var(--text)}
+.bar{height:8px;background:var(--surface);border:1px solid var(--rule-soft);overflow:hidden;margin-top:6px}
+.bar>span{display:block;height:100%}
+.barRow{margin:11px 0}
+.barTop{display:flex;justify-content:space-between;font-size:13px;font-weight:700}
+.tabbar{position:fixed;bottom:calc(14px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);z-index:5;display:flex;gap:0;background:var(--surface);border:1px solid var(--rule);max-width:calc(100vw - 24px)}
+.tabbar button{display:flex;flex-direction:column;align-items:center;gap:2px;padding:9px 16px;color:var(--text-muted);font:500 8px/1 var(--sans);letter-spacing:2px;text-transform:uppercase;border-right:1px solid var(--rule-soft)}
+.tabbar button:last-child{border-right:none}
+.tabbar button .ti{font-size:16px;line-height:1}
+.tabbar button.on{color:var(--text);background:var(--accent-soft)}
+.seg{display:flex;border:1px solid var(--rule);margin-top:14px}
+.seg button{flex:1;padding:9px;font:500 12px/1 var(--sans);color:var(--text-muted);letter-spacing:2px;text-transform:uppercase;border-right:1px solid var(--rule-soft)}
+.seg button:last-child{border-right:none}
+.seg button.on{background:var(--block);color:var(--on-block)}
+.srow{display:flex;align-items:center;justify-content:space-between;padding:14px 0}
+.srow+.srow{border-top:1px solid var(--rule-soft)}
+.srow .nm{font-size:15px;font-weight:600}
+.sw{width:50px;height:28px;padding:2px;flex:0 0 auto;transition:.15s;border:1px solid var(--rule-soft)}
+.sw .kn{width:24px;height:24px;background:var(--text);transition:.15s}
+.themeGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:11px}
+.swatch{text-align:center}
+.swatch .sq{width:48px;height:48px;margin:0 auto;display:grid;place-items:center;color:#fff;font-size:17px;border:1px solid var(--rule-soft)}
+.swatch .nm{font-size:10px;font-weight:500;margin-top:5px;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase}
+.packgrp{display:flex;align-items:center;gap:8px;width:100%;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--text-muted);font-weight:500;margin:14px 2px 10px}
+.packgrp:first-child{margin-top:4px}
+.pchev{margin-left:auto;font-size:12px;color:var(--text-muted)}
+.pro{font-size:8px;letter-spacing:1px;background:var(--accent);color:#fff;padding:2px 6px;font-weight:700;text-transform:uppercase}
+.paywallCard{background:var(--surface);border:1px solid var(--accent);padding:15px;margin-bottom:13px;animation:rise .2s ease both}
+.mini{color:var(--text-muted);font-size:12px;line-height:1.45}
+.back{font-size:13px;font-weight:700;color:var(--text);letter-spacing:2px;text-transform:uppercase}
+.upsell{background:var(--accent-soft);border:1px solid var(--rule);padding:16px;margin-top:6px}
+.signoff{font-family:var(--bl);text-align:center;font-size:18px;font-weight:400;color:var(--text-muted);margin-top:24px;line-height:1.1}
+
+/* ═══ astrocake site skin ═══ */
+
+.appwm{font-family:'Manufacturing Consent','UnifrakturMaguntia',serif!important;font-weight:400!important;font-style:normal!important;text-transform:lowercase!important;letter-spacing:-.015em!important;line-height:1!important;display:inline-flex;align-items:baseline;gap:0}
+.appwm::before{content:"\2726";font-family:'Inter Tight',sans-serif;font-size:.46em;margin-right:.14em;position:relative;top:-.12em;color:#FF90E8;-webkit-text-stroke:1px #1a1917}
+.appby{font-size:9px;letter-spacing:3px;text-transform:uppercase;font-weight:500;color:inherit;opacity:.7}
+.appby b{font-family:'Manufacturing Consent',serif;font-weight:400;font-size:15px;letter-spacing:0;text-transform:lowercase}
+.appby b::before{content:"\2726";font-family:'Inter Tight',sans-serif;font-size:.6em;margin-right:.12em;position:relative;top:-.15em;color:#FF90E8;-webkit-text-stroke:.8px #1a1917}
+
+:root{--accent:#8FD0F2;--accent-soft:#8FD0F2;--surface-ad:rgba(255,252,246,.55);--emphasis:var(--text);--gold:#F4CC2E}
+[data-theme="dark"]{--surface-ad:#232220;--emphasis:var(--text)}
+html:not([data-theme="dark"]) body{background:linear-gradient(180deg,#f2ebdd 0%,#f4e7e6 38%,#efe7ef 72%,#f2ebdd 100%);background-attachment:fixed;min-height:100%}
+.bg-grad,.replyCard:before{display:none!important}
+.brand .wm.appwm{font-size:34px;display:inline-flex;text-transform:lowercase}
+.brand .sub{font-size:9px;letter-spacing:3px;font-style:normal;margin-top:4px}
+.viewtitle{font-size:34px}
+.label,.seclabel{font-size:12px}
+.primary:not(.ghost):not(:disabled){background:var(--accent)!important;color:#1a1917!important;border:0!important;border-radius:0!important;box-shadow:none!important;font:700 13px/1 'Inter Tight',sans-serif!important;letter-spacing:3px!important;text-transform:uppercase!important;display:flex;align-items:center;justify-content:center;gap:10px;filter:none!important}
+.primary:not(.ghost):not(:disabled)::after{content:"\2726";font-size:1.05em;letter-spacing:0}
+.primary:not(.ghost):not(:disabled):hover{opacity:.88}
+
+.primary.ghost{border:2px solid var(--rule)!important;background:transparent!important;font:700 13px/1 var(--sans);letter-spacing:3px}
+.primary:disabled{border:1px dashed var(--rule)!important;background:transparent!important}
+.chip.active,.seg button.on{background:var(--accent);border-color:#1a1917;color:#1a1917}
+[data-theme="dark"] .chip.active{border-color:var(--accent)}
+.chip{background:transparent;color:var(--text)}
+.tier.vip{background:var(--accent);border-color:#1a1917;color:#1a1917}
+.tier.whale{background:#F4CC2E;border-color:#1a1917;color:#1a1917}
+.tier.sub{color:var(--text)}
+.vthumb{background:var(--accent);border-color:#1a1917}
+.fav{color:#1a1917!important;border:1px solid #1a1917}
+.pro{color:#1a1917;background:#D6EC4F;letter-spacing:2px}
+.paywallCard{border:2px solid var(--rule);background:transparent}
+.upsell{background:var(--accent);color:#1a1917;border-color:#1a1917}
+.upsell *{color:#1a1917!important}
+.rcLbl{font-weight:600}
+.bar>span{border-right:1px solid #1a1917}
+.swatch .sq{color:#1a1917}
+.tabbar{background:#f2ebdd}
+[data-theme="dark"] .tabbar{background:#232220}
+.tabbar button{font-size:9px}
+.tabbar button.on{background:var(--accent);color:#1a1917}
+.sw{border-radius:0}
+textarea:focus,.input:focus{border-color:var(--text);outline:1px solid var(--text)}
+.signoff:empty::before{content:"as above, so below"}
+.signoff{font-size:24px;color:var(--text)}
+.panel,.statBox,.fcard,.vitem,.replyCard{background:var(--surface-ad)}
+
+</style>
+</head>
+<body>
+<div class="bg-grad"></div>
+<div class="wrap" id="root"></div>
+<div class="tabbar">
+  <button data-tab="fans" class="on"><span class="ti">✦</span>fans</button>
+  <button data-tab="messages"><span class="ti">✦</span>dms</button>
+  <button data-tab="vault"><span class="ti">✦</span>vault</button>
+  <button data-tab="money"><span class="ti">✦</span>money</button>
+</div>
+<script>
+const $=(s,r=document)=>r.querySelector(s);
+const esc=s=>(s||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const money=n=>"$"+n.toLocaleString();
+
+const TONES=[
+  {id:"flirty",label:"FLIRTY",line:"playful, teasing, confident. a little chase, leaves them wanting."},
+  {id:"sweet",label:"SWEET",line:"warm, soft, attentive — girlfriend-experience energy."},
+  {id:"bossy",label:"BOSSY",line:"in charge, bratty-dominant, makes them work for it."},
+  {id:"mysterious",label:"MYSTERIOUS",line:"elusive, short, intriguing. leaves a hook."},
+  {id:"hype",label:"HYPE",line:"high-energy, fun, hyping them up while nudging the sale."},
+  {id:"vip",label:"VIP",line:"exclusive, high-value, makes them feel like the only one."},
+];
+const SCRIPTS=[
+  {id:"ppv",t:"PPV UPSELL",d:"tease a paid drop"},
+  {id:"winback",t:"WIN BACK",d:"re-engage a lapsed fan"},
+  {id:"tip",t:"TIP THANK-YOU",d:"reward a tipper warmly"},
+  {id:"renew",t:"RENEWAL NUDGE",d:"keep a sub from churning"},
+];
+const THEMES=[
+  {id:"ocean",name:"ICE",hex:"#8FD0F2",group:"after dark"},{id:"cobalt",name:"LILAC",hex:"#C7B0F5",group:"after dark"},
+  {id:"midnight",name:"PINK",hex:"#FF90E8",group:"after dark"},
+  {id:"coral",name:"TOMATO",hex:"#FF5A36",group:"sunset"},{id:"peach",name:"ORANGE",hex:"#FF9A3C",group:"sunset"},
+  {id:"rose",name:"YELLOW",hex:"#F4CC2E",group:"sunset"},
+  {id:"chartreuse",name:"CHARTREUSE",hex:"#D6EC4F",group:"pop"},{id:"mint",name:"MINT",hex:"#7FE0B5",group:"pop"},
+];
+const AVC=["#8FD0F2","#C7B0F5","#FF90E8","#F4CC2E","#7FE0B5","#D6EC4F"];
+
+const state={
+  signedIn:false,intro:true,_t:null,premium:false,paywall:false,
+  view:"fans",mode:"light",color:"ocean",tone:"flirty",voice:"",fanFilter:"All",
+  incoming:"",result:null,busy:false,selected:null,
+  packOpen:{"after dark":true,sunset:false,pop:false},
+  fans:[
+    {id:"f1",name:"BigMike",handle:"@daddymike",tier:"whale",spend:2840,last:"active now",mom:"↑ +$340 wk",note:"buys every PPV, loves attention & praise",color:"#8FD0F2"},
+    {id:"f2",name:"Sweetheart",handle:"@luvr502",tier:"vip",spend:980,last:"2h ago",mom:"↑ rising",note:"GFE type — wants connection, not just content",color:"#C7B0F5"},
+    {id:"f3",name:"Vegas Tony",handle:"@tonyv",tier:"whale",spend:1910,last:"6 days ago",mom:"↓ cooling",note:"hasn't renewed — send a winback",color:"#FF90E8"},
+    {id:"f4",name:"JJ",handle:"@jj_502",tier:"vip",spend:620,last:"1 day ago",mom:"→ steady",note:"tips big for customs",color:"#F4CC2E"},
+    {id:"f5",name:"QuietOne",handle:"@anon99",tier:"sub",spend:45,last:"active now",mom:"↑ warming",note:"lurker from the PH funnel, just started spending",color:"#7FE0B5"},
+    {id:"f6",name:"NewSub",handle:"@fresh",tier:"sub",spend:12,last:"3h ago",mom:"✦ new",note:"subbed today — send a welcome",color:"#D6EC4F"},
+  ],
+  vault:[
+    {id:"v1",name:"Shower set",price:25,sold:34,emoji:"✦"},{id:"v2",name:"Custom GFE clip",price:80,sold:6,emoji:"✦"},
+    {id:"v3",name:"Lingerie photoset",price:15,sold:60,emoji:"✦"},{id:"v4",name:"Sunday teaser (scheduled)",price:0,sold:0,emoji:"✦",scheduled:"Sun 8pm"},
+  ],
+};
+
+const themeHex=id=>(THEMES.find(t=>t.id===id)||THEMES[0]).hex;
+function setAccent(hex){document.documentElement.style.setProperty("--accent",hex);document.documentElement.style.setProperty("--accent-soft",hex);}
+function applyTheme(){document.documentElement.setAttribute("data-theme",state.mode==="system"?(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"):state.mode);}
+const totals=()=>{const subs=1200,ppv=state.vault.reduce((a,v)=>a+v.price*v.sold,0),tips=1420;return{subs,ppv,tips,total:subs+ppv+tips};};
+
+function render(){
+  applyTheme();setAccent(themeHex(state.color));
+  const tb=$(".tabbar");
+  if(!state.signedIn){tb.style.display="none";const r=$("#root");
+    if(state.intro){r.innerHTML=introView();const go=()=>{clearTimeout(state._t);state._t=null;state.intro=false;render();};$("#introScreen").onclick=go;if(!state._t)state._t=setTimeout(go,2100);return;}
+    r.innerHTML=authView();bindAuth();return;}
+  tb.style.display="flex";
+  document.querySelectorAll(".tabbar button").forEach(b=>b.classList.toggle("on",b.dataset.tab===state.view&&!state.selected));
+  const root=$("#root");
+  if(state.selected){root.innerHTML=fanView(state.selected);bindFanView();return;}
+  if(state.view==="fans"){root.innerHTML=fansView();bindFans();}
+  else if(state.view==="messages"){root.innerHTML=messagesView();bindMessages();}
+  else if(state.view==="vault"){root.innerHTML=vaultView();bindCommon();}
+  else if(state.view==="money"){root.innerHTML=moneyView();bindCommon();}
+  else{root.innerHTML=settingsView();bindSettings();}
+}
+function head(){return `<header><div class="brand"><div class="wm appwm">after dark</div><div class="sub">CREATOR OS</div></div><button class="iconbtn" id="gear">⚙</button></header>`;}
+
+function introView(){
+  return `<div id="introScreen" style="min-height:80vh;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;cursor:pointer;animation:fadein 1s ease both;border:1px solid var(--rule);margin-top:20px">
+    <div style="font-size:10px;letter-spacing:.3em;text-transform:uppercase;font-weight:500;font-style:italic;color:var(--text-muted);margin-bottom:8px">WELCOME TO</div>
+    
+    <h1 class="appwm" style="font-size:clamp(58px,17vw,84px)">after dark</h1>
+    <div style="margin-top:10px;text-transform:uppercase;letter-spacing:3px;font-size:9px;font-weight:500;color:var(--text-muted)">THE CREATOR OS</div>
+    <div style="position:absolute;bottom:52px;color:var(--text-muted);font-size:9px;letter-spacing:3px;text-transform:uppercase;font-weight:500">TAP TO ENTER ✦</div>
+    <div class="appby" style="position:absolute;bottom:22px;color:var(--text-muted)">an <b>astrocake</b> app · 18+</div>
+  </div>`;
+}
+function authView(){
+  return `<div style="animation:fadein 1.2s ease both;padding-top:24px">
+    <div style="text-align:center">
+      
+      <h1 class="appwm" style="font-size:clamp(48px,14vw,64px)">after dark</h1>
+    </div>
+    <div style="text-align:center;margin-top:16px">
+      <span style="font-weight:400;font-size:30px;text-transform:uppercase;letter-spacing:-.04em;line-height:.92">RUN YOUR <em style="font-weight:800;font-style:italic">EMPIRE</em></span>
+    </div>
+    <div style="text-align:center;text-transform:uppercase;letter-spacing:3px;font-size:9px;font-weight:500;color:var(--text-muted);margin-top:14px">FANS · DMS · VAULT · MONEY</div>
+    <div class="panel" style="margin-top:24px">
+      <button class="primary ghost" id="goog" style="margin-top:0;display:flex;align-items:center;justify-content:center;gap:9px"><span style="font-weight:800;color:#5B8DEF">G</span> CONTINUE WITH GOOGLE</button>
+      <div style="display:flex;align-items:center;gap:12px;margin:16px 2px"><div style="flex:1;height:1px;background:var(--rule-soft)"></div><span style="color:var(--text-muted);font-size:12px;font-weight:500">or</span><div style="flex:1;height:1px;background:var(--rule-soft)"></div></div>
+      <input class="input" placeholder="email address" style="margin-bottom:10px">
+      <input class="input" type="password" placeholder="password">
+      <button class="primary" id="cont">CONTINUE</button>
+    </div>
+    <div style="text-align:center;margin-top:14px;color:var(--text-muted);font-size:14px">new here? <button id="signup" style="color:var(--text);font-weight:700;text-transform:uppercase;letter-spacing:2px;font-size:12px">START FREE</button></div>
+    
+  </div>`;
+}
+
+function tierLabel(t){return t==="whale"?"WHALE":t==="vip"?"VIP":"SUB";}
+function fansView(){
+  const filters=["All","Whales","VIP","New","Lapsed"];
+  const match=f=>state.fanFilter==="All"||(state.fanFilter==="Whales"&&f.tier==="whale")||(state.fanFilter==="VIP"&&f.tier==="vip")||(state.fanFilter==="New"&&f.mom.includes("new"))||(state.fanFilter==="Lapsed"&&f.mom.includes("↓"));
+  let html=head()+`<div class="viewtitle"><em>FANS</em> ✦</div><div class="viewsub">${state.fans.length} fans · ${money(state.fans.reduce((a,f)=>a+f.spend,0))} lifetime</div>
+  <div class="chips" style="margin-bottom:6px">${filters.map(f=>`<button class="chip ${state.fanFilter===f?"active":""}" data-filter="${f}">${f.toUpperCase()}</button>`).join("")}</div>`;
+  const list=state.fans.filter(match).sort((a,b)=>b.spend-a.spend);
+  if(!list.length)html+=`<p class="mini" style="text-align:center;padding:24px">no fans in this filter.</p>`;
+  list.forEach(f=>{html+=`<button class="fcard" data-fan="${f.id}"><div class="fav" style="background:${f.color}">${esc(f.name[0])}</div>
+    <div class="fmeta"><div class="fname">${esc(f.name)} <span class="tier ${f.tier}">${tierLabel(f.tier)}</span></div>
+    <div class="fspend">${money(f.spend)} <span style="color:var(--text-muted);font-weight:400;font-size:11px">lifetime</span></div>
+    <div class="fnote">${esc(f.note)}</div></div>
+    <div class="fright"><div class="fmom">${esc(f.mom)}</div><div class="flast">${esc(f.last)}</div></div></button>`;});
+  return html;
+}
+function fanView(f){
+  return `<button class="back" id="fback">← FANS</button>
+  <div style="display:flex;gap:14px;align-items:center;margin:12px 0 14px"><div class="fav" style="flex:0 0 58px;height:58px;font-size:23px;background:${f.color}">${esc(f.name[0])}</div>
+    <div><div style="font-family:var(--bl);font-size:26px;font-weight:400">${esc(f.name)}</div><div class="mini" style="font-size:13px">${esc(f.handle)} · <span class="tier ${f.tier}">${tierLabel(f.tier)}</span></div></div></div>
+  <div class="statRow"><div class="statBox"><div class="statNum">${money(f.spend)}</div><div class="statLbl">LIFETIME</div></div><div class="statBox"><div class="statNum" style="font-size:15px">${esc(f.mom)}</div><div class="statLbl">TREND</div></div><div class="statBox"><div class="statNum" style="font-size:14px">${esc(f.last)}</div><div class="statLbl">LAST SEEN</div></div></div>
+  <div class="seclabel">NOTE</div><div class="panel"><div style="font-size:14px;line-height:1.5">${esc(f.note)}</div></div>
+  <div class="upsell"><div style="font-weight:700;margin-bottom:3px;font-size:12px;letter-spacing:2px;text-transform:uppercase">✦ SMART MOVE</div><div class="mini" style="font-size:13px;margin-bottom:11px">${f.mom.includes("↓")?"cooling off — hit them with a personal winback + a soft ppv tease.":f.tier==="whale"?"your whale. reward loyalty, then offer an exclusive custom.":"warm them up with gfe energy, then a low-priced ppv."}</div><button class="primary" id="draftMsg" style="margin-top:0">DRAFT A DM FOR ${esc(f.name).toUpperCase()}</button></div>`;
+}
+
+function messagesView(){
+  const tones=TONES.map(t=>`<button class="chip ${state.tone===t.id?"active":""}" data-tone="${t.id}">${t.label}</button>`).join("");
+  const scripts=SCRIPTS.map(s=>`<button class="scriptBtn" data-script="${s.id}">${s.t}<span>${s.d}</span></button>`).join("");
+  const cur=state.result;
+  return head()+`<div class="viewtitle">DM <em>STUDIO</em> ✦</div><div class="viewsub">write replies & upsells in your voice — flirty, never cringe.</div>
+  <div class="panel">
+    <label class="label">QUICK SCRIPTS</label>
+    <div class="scriptGrid">${scripts}</div>
+    <label class="label" style="margin-top:16px">OR PASTE WHAT A FAN SAID</label>
+    <textarea id="incoming" placeholder="hey gorgeous what are you up to tonight">${esc(state.incoming)}</textarea>
+    <div class="chips">${tones}</div>
+    <button class="primary" id="gen" ${state.busy?"disabled":""}>${state.busy?"WRITING…":"GENERATE"}</button>
+    ${cur?`<div class="replyCard"><div class="rcLbl">✦ ${TONES.find(t=>t.id===state.tone).label}</div><div class="replyText">${esc(cur)}</div><button class="primary ghost" id="copyMsg" style="margin-top:12px">COPY</button></div>`:""}
+  </div>`;
+}
+
+function vaultView(){
+  const earned=state.vault.reduce((a,v)=>a+v.price*v.sold,0);
+  let html=head()+`<div class="viewtitle"><em>VAULT</em> ✦</div><div class="viewsub">${state.vault.length} items · ${money(earned)} earned from ppv</div>`;
+  state.vault.forEach(v=>{html+=`<div class="vitem"><div class="vthumb">${v.emoji}</div><div class="vmeta"><div class="vname">${esc(v.name)}</div><div class="vstat">${v.scheduled?`drops ${esc(v.scheduled)}`:`${v.sold} sold · ${money(v.price*v.sold)}`}</div></div><div class="vprice">${v.price?money(v.price):"✦"}</div></div>`;});
+  html+=`<button class="primary ghost" style="margin-top:8px">+ UPLOAD / SCHEDULE A DROP</button>
+  <div class="seclabel">TIP MENU</div><div class="panel" style="padding:6px 16px">
+    ${[["rate me","$10"],["pick my outfit","$20"],["custom shoutout","$35"],["gfe day pass","$75"]].map(([a,b])=>`<div class="srow"><span class="nm" style="font-weight:400">${a}</span><span style="font-weight:800;color:var(--text)">${b}</span></div>`).join("")}
+  </div>`;
+  return html;
+}
+
+function moneyView(){
+  const t=totals();const top=[...state.fans].sort((a,b)=>b.spend-a.spend).slice(0,4);
+  const max=Math.max(t.subs,t.ppv,t.tips);
+  const bar=(lbl,val,col)=>`<div class="barRow"><div class="barTop"><span>${lbl}</span><span>${money(val)}</span></div><div class="bar"><span style="width:${Math.round(val/max*100)}%;background:${col}"></span></div></div>`;
+  let html=head()+`<div class="viewtitle"><em>MONEY</em> ✦</div><div class="viewsub">this month — you're up ↑</div>
+  <div class="panel" style="text-align:center;padding:22px"><div style="font-size:42px;font-weight:800;letter-spacing:-.03em">${money(t.total)}</div><div class="statLbl" style="margin-top:4px">EARNED THIS MONTH</div></div>
+  <div class="seclabel">BREAKDOWN</div><div class="panel">${bar("SUBSCRIPTIONS",t.subs,"var(--accent)")}${bar("PPV / CONTENT",t.ppv,"#F4CC2E")}${bar("TIPS",t.tips,"#FF90E8")}</div>
+  <div class="seclabel">TOP SPENDERS</div>`;
+  top.forEach((f,i)=>{html+=`<button class="fcard" data-fan="${f.id}"><div class="fav" style="background:${f.color}">${i+1}</div><div class="fmeta"><div class="fname">${esc(f.name)} <span class="tier ${f.tier}">${tierLabel(f.tier)}</span></div><div class="fnote">${esc(f.handle)}</div></div><div class="fright"><div class="fspend" style="color:var(--text)">${money(f.spend)}</div></div></button>`;});
+  html+=``;
+  return html;
+}
+
+function sw(on){return `<div class="sw" style="background:${on?"var(--green)":"var(--surface)"}"><div class="kn" style="transform:translateX(${on?"24px":"0"});${on?"background:var(--on-block)":""}"></div></div>`;}
+function settingsView(){
+  const pw=(state.paywall&&!state.premium)?`<div class="paywallCard"><div style="font-weight:700;font-size:12px;letter-spacing:2px;text-transform:uppercase">✦ GO PRO</div><div class="mini" style="margin:5px 0 11px">unlimited fans, ai dms, all color packs, advanced analytics & scheduling.</div><button class="primary goPro" style="margin-top:0">UPGRADE — $19/MO</button></div>`:"";
+  const FREE=["ocean","cobalt","midnight"];
+  const locked=t=>!state.premium&&!FREE.includes(t.id);
+  const mkSw=t=>{const lk=locked(t),sel=state.color===t.id;return `<button class="swatch" data-theme-id="${t.id}" data-locked="${lk?1:0}"><div class="sq" style="background:${t.hex};${sel?"outline:2px solid var(--text);outline-offset:3px":""}${lk?";opacity:.35":""}">${sel?"✓":""}</div><div class="nm">${t.name}</div></button>`;};
+  const themes=["after dark","sunset","pop"].map(g=>{const open=state.packOpen[g];const pro=(!state.premium&&g!=="after dark")?`<span class="pro">PRO</span>`:"";return `<button class="packgrp" data-pack="${g}">${g.toUpperCase()}${pro}<span class="pchev">${open?"▾":"▸"}</span></button>${open?`<div class="themeGrid">${THEMES.filter(t=>t.group===g).map(mkSw).join("")}</div>`:""}`;}).join("");
+  return `${head()}<div class="viewtitle">SETTINGS</div>
+  <div class="seclabel">ACCOUNT</div><div class="panel" style="padding:2px 16px">
+    <div class="srow"><span class="nm">plan</span><button data-subtoggle style="font-weight:700;color:var(--text);font-size:12px;letter-spacing:2px;text-transform:uppercase">${state.premium?"AFTER DARK PRO ✦":"FREE"}</button></div>
+    <div class="srow"><span class="nm">connected</span><span class="mini" style="font-size:13px">onlyfans · fansly</span></div>
+    <button class="srow" data-signout style="width:100%;text-align:left"><span class="nm" style="color:var(--red)">sign out</span></button></div>
+  <div class="seclabel">APPEARANCE</div><div class="seg">${["light","dark","system"].map(m=>`<button class="${state.mode===m?"on":""}" data-mode="${m}">${m.toUpperCase()}</button>`).join("")}</div>
+  <div class="seclabel">COLOR PACKS ✦</div><div class="panel" style="padding-top:4px">${pw}${themes}<div class="mini" style="margin-top:11px">${state.premium?"every pack unlocked.":"free includes 3 after dark colors. pro unlocks all."}</div></div>
+  <div class="seclabel">YOUR VOICE</div><div class="panel"><textarea id="voice" placeholder="how you talk to fans — pet names, emojis, your hooks…">${esc(state.voice)}</textarea><div class="mini" style="margin-top:8px">trains every dm to sound like you.</div></div>
+  <div class="seclabel">AUTOMATIONS</div><div class="panel" style="padding:2px 16px">
+    <div class="srow"><span class="nm">auto-welcome new subs</span><button data-tog="autowelcome">${sw(state.premium)}</button></div>
+    <div class="srow"><span class="nm">churn alerts</span><button data-tog="churn">${sw(state.premium)}</button></div></div>
+  <div class="signoff" style="margin-top:32px"></div>`;
+}
+
+function bindCommon(){const g=$("#gear");if(g)g.onclick=()=>{state.view="settings";state.selected=null;render();};document.querySelectorAll("[data-fan]").forEach(b=>b.onclick=()=>{state.selected=state.fans.find(f=>f.id===b.dataset.fan);render();});}
+function bindAuth(){const e=()=>{state.signedIn=true;state.view="fans";render();};["goog","cont","signup"].forEach(id=>{const b=$("#"+id);if(b)b.onclick=e;});}
+function bindFans(){bindCommon();document.querySelectorAll("[data-filter]").forEach(b=>b.onclick=()=>{state.fanFilter=b.dataset.filter;render();});}
+function bindFanView(){$("#fback").onclick=()=>{state.selected=null;render();};const d=$("#draftMsg");if(d)d.onclick=()=>{state.view="messages";state.selected=null;state.incoming="";render();};}
+function bindMessages(){bindCommon();const i=$("#incoming");if(i)i.oninput=e=>state.incoming=e.target.value;document.querySelectorAll("[data-tone]").forEach(b=>b.onclick=()=>{state.tone=b.dataset.tone;render();});document.querySelectorAll("[data-script]").forEach(b=>b.onclick=()=>genScript(b.dataset.script));const g=$("#gen");if(g)g.onclick=()=>genReply();const c=$("#copyMsg");if(c)c.onclick=()=>{c.textContent="✓ COPIED";};}
+function bindSettings(){const g=$("#gear");if(g)g.onclick=()=>{state.view="fans";render();};document.querySelectorAll("[data-mode]").forEach(b=>b.onclick=()=>{state.mode=b.dataset.mode;render();});document.querySelectorAll("[data-theme-id]").forEach(b=>b.onclick=()=>{if(b.dataset.locked==="1"){state.paywall=true;render();return;}state.paywall=false;state.color=b.dataset.themeId;render();});document.querySelectorAll("[data-pack]").forEach(b=>b.onclick=()=>{state.packOpen[b.dataset.pack]=!state.packOpen[b.dataset.pack];render();});document.querySelectorAll(".goPro").forEach(b=>b.onclick=()=>{state.premium=true;state.paywall=false;render();});const stb=$("[data-subtoggle]");if(stb)stb.onclick=()=>{state.premium=!state.premium;state.paywall=false;render();};const v=$("#voice");if(v)v.oninput=e=>state.voice=e.target.value;const so=$("[data-signout]");if(so)so.onclick=()=>{state.signedIn=false;state.intro=true;render();};}
+
+const SYS=`You write DMs AS an adult content creator talking to a paying fan/subscriber, inside a tool called After Dark. Sound like a real flirty, confident creator — warm, playful, magnetic. Goals: build connection, tease, and make tasteful sales (PPV, tips, renewals).
+RULES: flirty, suggestive, GFE energy is fine — but keep it TASTEFUL and NON-EXPLICIT (no graphic sexual content). 1-3 short lines, lowercase-casual, emojis with intention, instantly sendable. Never sound corporate or like a chatbot. Never desperate.`;
+async function call(userMsg){const tone=TONES.find(t=>t.id===state.tone);const sys=`${SYS}\nTONE: ${tone.label} — ${tone.line}.${state.voice?`\nCREATOR'S OWN VOICE NOTES: ${state.voice}`:""}\nReturn ONLY the message text, nothing else.`;try{const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-6",max_tokens:400,system:sys,messages:[{role:"user",content:userMsg}]})});const d=await r.json();return d.content.filter(x=>x.type==="text").map(x=>x.text).join("").trim().replace(/^["']|["']$/g,"");}catch(e){return "(couldn't reach the model — try again)";}}
+async function genReply(){state.busy=true;render();state.result=await call(`A fan messaged me: "${state.incoming||"hey gorgeous what are you up to"}". Write my reply.`);state.busy=false;render();}
+async function genScript(id){state.busy=true;state.view="messages";render();const prompts={ppv:"Write a flirty DM teasing a new paid photo/video drop so they want to unlock it.",winback:"Write a warm, a-little-flirty win-back DM to a fan who hasn't been around in a week.",tip:"Write a sweet, flirty thank-you DM to a fan who just tipped me.",renew:"Write a playful nudge DM to a fan whose subscription is about to expire, so they renew."};state.result=await call(prompts[id]);state.busy=false;render();}
+
+document.querySelectorAll(".tabbar button").forEach(b=>b.onclick=()=>{state.view=b.dataset.tab;state.selected=null;window.scrollTo({top:0});render();});
+render();
+</script>
+</body>
+</html>
